@@ -1,0 +1,15 @@
+/home/red/Documents/sync/EESS/lego_sorter/project/cli/bin/Debug/net10.0/cli
+/home/red/Documents/sync/EESS/lego_sorter/project/cli/bin/Debug/net10.0/cli.deps.json
+/home/red/Documents/sync/EESS/lego_sorter/project/cli/bin/Debug/net10.0/cli.runtimeconfig.json
+/home/red/Documents/sync/EESS/lego_sorter/project/cli/bin/Debug/net10.0/cli.dll
+/home/red/Documents/sync/EESS/lego_sorter/project/cli/bin/Debug/net10.0/cli.pdb
+/home/red/Documents/sync/EESS/lego_sorter/project/cli/obj/Debug/net10.0/cli.GeneratedMSBuildEditorConfig.editorconfig
+/home/red/Documents/sync/EESS/lego_sorter/project/cli/obj/Debug/net10.0/cli.AssemblyInfoInputs.cache
+/home/red/Documents/sync/EESS/lego_sorter/project/cli/obj/Debug/net10.0/cli.AssemblyInfo.cs
+/home/red/Documents/sync/EESS/lego_sorter/project/cli/obj/Debug/net10.0/cli.csproj.CoreCompileInputs.cache
+/home/red/Documents/sync/EESS/lego_sorter/project/cli/obj/Debug/net10.0/cli.sourcelink.json
+/home/red/Documents/sync/EESS/lego_sorter/project/cli/obj/Debug/net10.0/cli.dll
+/home/red/Documents/sync/EESS/lego_sorter/project/cli/obj/Debug/net10.0/refint/cli.dll
+/home/red/Documents/sync/EESS/lego_sorter/project/cli/obj/Debug/net10.0/cli.pdb
+/home/red/Documents/sync/EESS/lego_sorter/project/cli/obj/Debug/net10.0/cli.genruntimeconfig.cache
+/home/red/Documents/sync/EESS/lego_sorter/project/cli/obj/Debug/net10.0/ref/cli.dll
