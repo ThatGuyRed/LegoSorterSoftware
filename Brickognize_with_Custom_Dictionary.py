@@ -28,6 +28,13 @@ categories_mapping = list(reader)
 
 
 def get_category_number(category):
+    """ Returns category number of an item
+    Args: 
+        Category (list(dictionary)): A list of dictionaries.
+
+    Returns: 
+        ???
+    """
     for item in categories_mapping:
         if item['name'] == category:
             # print(f"Category name: {item['name']}, Category number: {item[category]}")
@@ -35,6 +42,14 @@ def get_category_number(category):
 
 
 def capture_image(cap, filename='lego_piece.jpg'):
+    """ Captures image and stores it to the local filesystem.
+    Args:
+        cap (???): ???
+        filename (str): Output file name.
+
+    Returns:
+        filename (string): Output file name.
+    """
     ret, frame = cap.read()
     cap.release()
 
