@@ -11,5 +11,4 @@ def SearchCategory(category):
             return item['category']
 
 
-SearchCategory('Fence')
-categories.get('1')
+print(SearchCategory('Fence'))

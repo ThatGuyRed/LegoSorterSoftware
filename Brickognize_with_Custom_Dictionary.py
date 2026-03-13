@@ -39,9 +39,11 @@ def capture_image(cap, filename='lego_piece.jpg'):
     cap.release()
 
     if brick_counter == 0:
-        cv2.imwrite(filename, frame)
+        cv2.imwrite(filename, frame)  # Writes image to file system
         cv2.imshow('Captured Image', frame)
-        cv2.waitKey(0)  # Wait for a key press to close the window
+
+        # cv2.waitKey(0)  # Wait for a key press to close the window
+
         cv2.destroyAllWindows()
 
     return filename
