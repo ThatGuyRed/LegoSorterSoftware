@@ -18,9 +18,12 @@
 <code>app.py</code>
 - Graphical User Interface (GUI) written with the PyQt6 library.
   - The UI can be designed graphically using the Qt Widgets Designer
-    - Qt Widgets Designer download: 
+    - Qt Widgets Designer download:
+
       Arch Linux: qt6-tools
+
       **please add package source for your OS here**
+
     - The .ui file will have to be converted into .py in order to allow for it to be imported as a python class:
     ```shell
       pyside6-uic <filename>.ui -o <filename>.py
