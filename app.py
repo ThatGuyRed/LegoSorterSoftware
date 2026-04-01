@@ -11,6 +11,8 @@ from main import Ui_LegoSorterEESS
 import requests
 import os
 import subprocess
+# from PIL import Image
+from PIL import Image
 
 
 class MainWindow(QMainWindow):
@@ -21,28 +23,23 @@ class MainWindow(QMainWindow):
         self.ui.pushButton.clicked.connect(self.execApp)
 
     def execApp(self):
-        # os.system("python Brickognize_with_Custom_Dictionary.py")
-        scan = brick.main()
-        category_number = scan[0]
-        piece_name = scan[1]
-        piece_img = scan[2]
-        piece_id = scan[3]
-        # category_number, piece_name, piece_img, piece_id = brick.main()
-        # piece_img = '127.0.0.1'
-        # piece_name = 'debugName'
-        # piece_id = 'debugID'
-        # self.ui.webEngineView.setHtml("")
-        # self.ui.webEngineView.setUrl(piece_img)
-        # self.ui.webEngineView.page().triggerAction(QWebEnginePage.ReloadAndBypassCache)
-        image_data = requests.get(piece_img).content
-        image = QPixmap()
-        print(piece_img)
-        image.loadFromData(image_data)
-        self.ui.img.setPixmap(image)
-        self.ui.img.setScaledContents(True)
-        self.ui.PieceName.setText(piece_name)
 
-        self.ui.PieceID.setText(piece_id)
+        # category_number, piece_name, piece_img, piece_id = brick.scan_piece()
+
+        piece = brick.scan_piece()
+        if (piece.category_number < 10):
+            print("Your mother: ", piece.piece_img)
+
+            response = requests.get(piece.piece_img)
+            with open('brick_img.webp', 'wb') as file:
+                file.write(response.content)
+            img = Image.open('brick_img.webp')
+            img.convert("RGB")
+            img.save('brick_img.jpeg')
+            self.ui.img.setPixmap(QPixmap(u"brick_img.jpeg"))
+
+            self.ui.PieceName.setText(piece.piece_name)  # Updates UI -> Name
+            self.ui.PieceID.setText(piece.piece_id)  # Updates UI -> ID
 
 
 if __name__ == "__main__":
