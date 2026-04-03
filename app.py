@@ -1,17 +1,15 @@
-import Brickognize_with_Custom_Dictionary as brick
+# import Brickognize_with_Custom_Dictionary as brick
+import brickognize_script_v2 as brick
 import sys
-from src import *
-
-import sys
+# import sys
 from PySide6.QtWidgets import *  # debug, change to only relevant modules in 1.0
-from PySide6.QtCore import QFile, QUrl
-from PySide6.QtWebEngineWidgets import QWebEngineView
-from PySide6.QtGui import QPixmap, QImage
+# from PySide6.QtCore import QFile, QUrl
+# from PySide6.QtWebEngineWidgets import QWebEngineView
+from PySide6.QtGui import QPixmap
 from main import Ui_LegoSorterEESS
 import requests
 import os
-import subprocess
-# from PIL import Image
+# import subprocess
 from PIL import Image
 
 
@@ -23,20 +21,25 @@ class MainWindow(QMainWindow):
         self.ui.pushButton.clicked.connect(self.execApp)
 
     def execApp(self):
-
-        # category_number, piece_name, piece_img, piece_id = brick.scan_piece()
-
         piece = brick.scan_piece()
-        if (piece.category_number < 10):
-            print("Your mother: ", piece.piece_img)
+        if (piece.category_number == 9):
+            self.ui.img.setPixmap(QPixmap(u"rick.jpg"))
+            self.ui.PieceName.setText(u"ERROR")  # Updates UI -> Name
+            self.ui.PieceID.setText(u"ERROR")
+
+        elif (piece.category_number < 10):
+            if os.path.exists('brick_img.jpeg'):
+                os.remove('brick_img.jpeg')  # Remove if exists
 
             response = requests.get(piece.piece_img)
             with open('brick_img.webp', 'wb') as file:
                 file.write(response.content)
+
             img = Image.open('brick_img.webp')
             img.convert("RGB")
             img.save('brick_img.jpeg')
             self.ui.img.setPixmap(QPixmap(u"brick_img.jpeg"))
+            os.remove('brick_img.webp')  # Cleanup
 
             self.ui.PieceName.setText(piece.piece_name)  # Updates UI -> Name
             self.ui.PieceID.setText(piece.piece_id)  # Updates UI -> ID

@@ -3,6 +3,8 @@ import requests
 import json
 import time
 import csv
+import datetime
+import os  # DELETE
 
 # public variables
 brick_counter = 0
@@ -45,30 +47,43 @@ def get_category_number(category):
     return 9
 
 
-def capture_image(cap, filename='lego_piece.jpg'):
+def capture_image():
     """ Captures image and stores it to the local filesystem.
-    Args:
-        cap (???): ???
-        filename (str): Output file name.
-
     Returns:
         filename (string): Output file name.
     """
+    filename = 'lego_piece' + datetime.datetime.now().strftime("%Y%m%d_%H%M%S_%f") + ".jpg"
+    # Open defualt video capture device. 0 is the default camera]
+    cap = cv2.VideoCapture(0)
+
+    # If camera cannot be opened, run this code.
+    if not cap.isOpened():
+        print("Error: Could not open camera.")
+        return -1
+
     ret, frame = cap.read()
     cap.release()
 
     if brick_counter == 0:
         cv2.imwrite(filename, frame)  # Writes image to file system
         cv2.imshow('Captured Image', frame)
-
         # cv2.waitKey(0)  # Wait for a key press to close the window
-
         cv2.destroyAllWindows()
-
     return filename
 
 
 def recognize_lego_piece(image_path):
+    """ Queries the Brickognize API for piece information.
+    Args: 
+        image_path (str): Path of an image.
+
+    Returns: 
+        category_number (str): Category number of the recognized piece.
+        piece_name (str): Name of the recognized piece.
+        piece_img (str): URL to an image of the category_numberognized piece.
+        piece_id (str): ID of the recognized piece.
+
+    """
     url = 'https://api.brickognize.com/predict'  # Updated API endpoint
     files = {'query_image': (image_path, open(image_path, 'rb'), 'image/jpeg')}
     headers = {'accept': 'application/json'}
@@ -79,11 +94,6 @@ def recognize_lego_piece(image_path):
         print('Full response:', result)
 
         if 'items' in result and len(result['items']) > 0:
-            # All the important data we want on the frontend
-            #
-            # Issue: If the API does not return items,
-            #        the code below bugs out
-            #
             collection = result['items'][0]
             category_name = collection['category']
             piece_name = collection['name']
@@ -94,16 +104,11 @@ def recognize_lego_piece(image_path):
                   piece_name, '\nID: ', piece_id, '\n')  # debug
 
             category_number = get_category_number(category_name)
-            # print('\nDEBUG INFO', '\nURL: ', piece_img, '\nName: ',
-            #     piece_name, '\nID: ', piece_id, '\n')  # debug
-            # return category_number, piece_name, piece_img, piece_id
+
             return int(category_number), piece_name, piece_img, piece_id
-        # This else block might not do anything
         else:
             # Default to Miscellaneous and Promotional Items if no items found
-            # return 9
             category_number = 9
-            # This will almost certainly bug out the code when we have a category 9
             return 9, -1, -1, -1
     else:
         print('Error:', response.status_code, response.text)
@@ -117,53 +122,35 @@ def sort_piece(category_number):
     print(f"Sorting piece into category number: {category_number}")
 
 
-def exec():
-    # Note: We might want to have a separate method to call main() in loop, possibly linked to cv2 functionality
-
-    # Run image recognition in a loop for now
-    run = True
-    while run:
-
-        # Open defualt video capture device. 0 is the default camera]
-        cap = cv2.VideoCapture(0)
-
-        # If camera cannot be opened, run this code.
-        if not cap.isOpened():
-            print("Error: Could not open camera.")
-            return
-
-        image_path = capture_image(cap)  # Run capture image method
-        category_number, piece_name, piece_img, piece_id = recognize_lego_piece(
-            image_path)  # Run image recognition
-
-        # Get data
-        # category_number, name, img, id = recognize_lego_piece(image_path)
-        print("sfsfsdf", piece_img)
-        if (category_number != 10):
-            sort_piece(category_number)
-            global brick_counter  # Increment the brick counter
-            brick_counter += 1
-            print(f"Total bricks logged: {brick_counter}", flush=True)
-            run = False
-        time.sleep(1)  # Add a delay to avoid overwhelming the API
-    # Stops the while loop (move this elsewhere when we need the program to run more than one iteration)
-
-    return category_number, piece_name, piece_img, piece_id
-
-# DEBUG, doesn't do anything
-
-
-def main():
-    exec()
-
-
 class scan_piece:
     def __new__(cls):
         return super(scan_piece, cls).__new__(cls)
 
     def __init__(self):
-        self.category_number, self.piece_name, self.piece_img, self.piece_id = exec()
+        # Run image recognition in a loop for now
+        self.run = True
+        while self.run:
 
+            self.image_path = capture_image()  # Run capture image method
+            if self.image_path == -1:
+                self.run = False
 
-if __name__ == '__main__':
-    main()
+            self.category_number, self.piece_name, self.piece_img, self.piece_id = recognize_lego_piece(
+                self.image_path)  # Run image recognition
+
+            # Get data
+            # category_number, name, img, id = recognize_lego_piece(image_path)
+            if (self.category_number != 10):
+                sort_piece(self.category_number)
+                '''
+                all functionality relating to brick_counter should be moved to app.py
+                '''
+                # global brick_counter  # Increment the brick counter
+                # brick_counter += 1
+                # print(f"Total bricks logged: {brick_counter}", flush=True)
+                # Stops the while loop (move this elsewhere when we need the program to run more than one iteration)
+                self.run = False
+            time.sleep(1)  # Add a delay to avoid overwhelming the API
+
+            # Cleanup
+            os.remove(self.image_path)
