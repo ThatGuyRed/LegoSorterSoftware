@@ -44,6 +44,10 @@ class MainWindow(QMainWindow):
             self.ui.PieceName.setText(piece.piece_name)  # Updates UI -> Name
             self.ui.PieceID.setText(piece.piece_id)  # Updates UI -> ID
 
+            # placeholder container
+            brick.store_data(piece, 1)
+            brick.print_data()
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

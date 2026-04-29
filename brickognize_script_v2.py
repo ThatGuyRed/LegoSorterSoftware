@@ -34,10 +34,10 @@ categories_mapping = list(reader)
 
 def get_category_number(category):
     """ Returns category number of an item
-    Args: 
+    Args:
         Category (list(dictionary)): A list of dictionaries.
 
-    Returns: 
+    Returns:
         ???
     """
     for item in categories_mapping:
@@ -74,10 +74,10 @@ def capture_image():
 
 def recognize_lego_piece(image_path):
     """ Queries the Brickognize API for piece information.
-    Args: 
+    Args:
         image_path (str): Path of an image.
 
-    Returns: 
+    Returns:
         category_number (str): Category number of the recognized piece.
         piece_name (str): Name of the recognized piece.
         piece_img (str): URL to an image of the category_numberognized piece.
@@ -116,8 +116,52 @@ def recognize_lego_piece(image_path):
         return 10, -1, -1, -1
 
 
+# Placeholder size, used to check max index
+num_containers = 9
+# This should be an array storing dictionaries [key: piece_id] storing class scan_piece (class contains piece info) and count
+containers = []
+for i in range(num_containers):
+    containers.append({})
+
+# Dictionary has built in hashing
+# O(1) time complexity for updating, checking.
+# O(n) when iterating; fetch all/copying
+
+
+def store_data(data, container):
+    """ Stores brick info in a dictionary.
+    Args:
+        data (scan_piece): Piece data.
+        container (int): Container the piece will go in.
+    Returns:
+        None.
+    """
+    # This probably doesn't work
+    key = data.piece_id
+    if (key in containers[container]):
+        containers[container][key].increment()
+    else:
+        containers[container][key] = data
+# Need some sort of output for stored data
+
+
+def print_data():
+    for container in containers:
+        if container:  # Empty check
+            print('Container ', containers.index(container), ':\n')
+            for key in container:
+                data = container[key]
+                print('key:', key, ', name:', data.piece_name,
+                      ', count:', data.count, '\n')
+
+
 def sort_piece(category_number):
     # Implement your sorting logic here
+    sort_piece_action(category_number)
+
+
+def sort_piece_action(category_number):
+    # Implement your sorting logic (ELECTRONICS)
     # For example, control motors or actuators to direct the piece to the correct bin
     print(f"Sorting piece into category number: {category_number}")
 
@@ -129,6 +173,7 @@ class scan_piece:
     def __init__(self):
         # Run image recognition in a loop for now
         self.run = True
+        self.count = 1
         while self.run:
 
             self.image_path = capture_image()  # Run capture image method
@@ -143,7 +188,7 @@ class scan_piece:
             if (self.category_number != 10):
                 sort_piece(self.category_number)
                 '''
-                all functionality relating to brick_counter should be moved to app.py
+                all functionality relating to brick_counter should be moved to app.py or a separate class?
                 '''
                 # global brick_counter  # Increment the brick counter
                 # brick_counter += 1
@@ -154,3 +199,6 @@ class scan_piece:
 
             # Cleanup
             os.remove(self.image_path)
+
+    def increment(self):
+        self.count = self.count + 1
